@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Smoke : MonoBehaviour
 {
+    BarOperations BarOperations;
     Animator animator;
     Slider smoke_slider;
     Slider temperature_slider;
@@ -29,10 +30,11 @@ public class Smoke : MonoBehaviour
     Sprite health_dead;
     void Start()
     {
-      animator = GetComponent<Animator>();
-      smoke_slider = GameObject.Find("Bar").GetComponent<Slider>();
-      temperature_slider = GameObject.Find("TemperatureSlider").GetComponent<Slider>();
-      audioSource = GameObject.Find("Hookah").GetComponent<AudioSource>();
+        BarOperations = GameObject.Find("Bar/PlayerBar").GetComponent<BarOperations>();
+        animator = GetComponent<Animator>();
+        smoke_slider = GameObject.Find("Bar").GetComponent<Slider>();
+        temperature_slider = GameObject.Find("TemperatureSlider").GetComponent<Slider>();
+        audioSource = GameObject.Find("Hookah").GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -58,12 +60,18 @@ public class Smoke : MonoBehaviour
                 firstStop = false;
                 print(stopValue);
 
-                if(stopValue>=0.812 && stopValue <=0.873)
+                // if(stopValue>=0.812 && stopValue <=0.873)
+                //     Win();
+                // else
+                //     Lose();
+                if(BarOperations.inCollisionG)
                     Win();
-                else
+                else if(BarOperations.inCollisionR)
                     Lose();
+                else if(BarOperations.inCollisionW)
+                    print("Neutral");
+                //print(BarOperations.inCollisionG);
                 if(audioSource.isPlaying)
-                    //audioSource.Pause();
                     audioSource.Stop();
                 
                 smoke.Play();
@@ -71,6 +79,7 @@ public class Smoke : MonoBehaviour
             }
             
             animator.SetTrigger("trigger_stop");
+
             // StopCoroutine(StartSlider());
             StopAllCoroutines();
             StartSlider_isPlaying = false;
