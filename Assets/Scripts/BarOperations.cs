@@ -30,6 +30,8 @@ public class BarOperations : MonoBehaviour
     public bool inCollisionR = false;
     public bool inCollisionW = false;
 
+    public GameObject colidedObject;
+
     // private float boxScale_COEF;
 
     void Start()
@@ -54,7 +56,7 @@ public class BarOperations : MonoBehaviour
         // print("V: " + playerSpeed);
         // print("T: "+barWidth/playerSpeed);
 
-        InvokeRepeating("Spawn", 2, 1f);
+        // StartSpawning();
         
           
     }
@@ -88,7 +90,7 @@ public class BarOperations : MonoBehaviour
         NewObj.GetComponent<RectTransform>().SetParent(parentSlider.transform);
         NewObj.GetComponent<RectTransform>().localPosition = new Vector3(rightBound-10,transform.localPosition.y,transform.localPosition.z);
         NewObj.GetComponent<RectTransform>().localScale = new Vector3(1,0.8f,0);
-        NewObj.transform.SetSiblingIndex(3);
+        NewObj.transform.SetSiblingIndex(2);
 
         SelectColor(NewObj);
         ApplyRandomScale(NewObj);
@@ -109,8 +111,10 @@ public class BarOperations : MonoBehaviour
         for (int i = spawnedObjects.Count - 1; i >= 0; i--){
             GameObject obj = (GameObject)spawnedObjects[i];
             if(obj.GetComponent<RectTransform>().localPosition.x <= leftBound+10){
+                // print(spawnedObjects.IndexOf(obj) + " " + i);
                 Destroy(obj);
                 spawnedObjects.Remove(obj);
+                
                 objects_speed.RemoveAt(i);
             }
             else
@@ -136,14 +140,20 @@ public class BarOperations : MonoBehaviour
     }
     
     private void OnTriggerEnter2D(Collider2D other) {
+        colidedObject = other.gameObject;
         if(other.gameObject.tag == "GreenBlock"){
             inCollisionG = true;
+            // print("G");
+            // DestroyObject(other.gameObject);
         }
         else if(other.gameObject.tag == "RedBlock"){
             inCollisionR = true;
+            // print("R");
         }
         else if(other.gameObject.tag == "WhiteBlock"){
             inCollisionW = true;
+            // print("W");
+            // DestroyOFbject(other.gameObject);
         }
     }
     private void OnTriggerExit2D(Collider2D other) {
@@ -156,5 +166,24 @@ public class BarOperations : MonoBehaviour
         else if(other.gameObject.tag == "WhiteBlock"){
             inCollisionW = false;
         }
+    }
+
+    public void DestroyObject(GameObject obj){
+        Destroy(obj);
+        objects_speed.RemoveAt(spawnedObjects.IndexOf(obj));
+        spawnedObjects.Remove(obj);        
+    }
+    public void StopSpawning(){
+        CancelInvoke("Spawn");
+        // print(spawnedObjects.Count);
+        
+        for (int i = spawnedObjects.Count - 1; i >= 0; i--){
+            DestroyObject((GameObject)(spawnedObjects[i]));
+        }
+        
+    }
+    public void StartSpawning(){
+        InvokeRepeating("Spawn", 2, 1f);
+        
     }
 }
