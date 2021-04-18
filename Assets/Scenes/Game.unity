@@ -7186,9 +7186,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61cc841b25d89b3498a632995c49bce5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 4
-  maxHeartBeat: 3.5
-  currentHeartBeat: 1
 --- !u!82 &1575187234
 AudioSource:
   m_ObjectHideFlags: 0
