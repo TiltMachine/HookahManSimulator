@@ -1,8 +1,10 @@
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 public class Smoke : MonoBehaviour
 {
     BarOperations BarOperations;
@@ -10,30 +12,27 @@ public class Smoke : MonoBehaviour
     Animator animator;
     GameObject tapToStart;
     GameObject bar;
+    GameObject heart;
+    TextMeshProUGUI heartbeat;
     Slider smoke_slider;
     Slider temperature_slider;
 
-    AudioSource audioSource;
+    AudioSource[] sounds;
+    AudioSource smokingSound;
+    AudioSource coughSound;
+    private float smoke_speed;
+    private float temperature_speed_up;
+    private float temperature_speed_down;
 
-    public float smoke_speed = 0.5f;
-    public float temperature_speed_up = 0.2f;
-    public float temperature_speed_down = 0.2f;
-
-    // bool firstStop = false;
     bool firstTouchToStartSmoking = true;
+    bool inAnimationSmoking = false;
     bool isSmoking = false;
-    bool StartSlider_isPlaying = false;
-    // private float stopValue = 0;
-    private int lose_count = 0;
+   
+    [SerializeField]
+    ParticleSystem smoke_Particles;
 
-    
-    [SerializeField]
-    ParticleSystem smoke;
-    [SerializeField]
-    Sprite health_full;
-    [SerializeField]
-    Sprite health_dead;
-    private string pathToHearts;
+    public AudioSource CoughSound { get => coughSound; set => coughSound = value; }
+
     void Start()
     {
         BarOperations = GameObject.Find("Bar/PlayerBar").GetComponent<BarOperations>();
@@ -41,34 +40,52 @@ public class Smoke : MonoBehaviour
         animator = GetComponent<Animator>();
         tapToStart = GameObject.Find("TapToStart");
         bar = GameObject.Find("Bar");
+        heart = GameObject.Find("Heart");
+        heartbeat = GameObject.Find("Heart/BPM").GetComponent<TextMeshProUGUI>();
         smoke_slider = bar.GetComponent<Slider>();
         temperature_slider = GameObject.Find("TemperatureSlider").GetComponent<Slider>();
-        audioSource = GameObject.Find("Hookah").GetComponent<AudioSource>();
+        // smokingSound = GameObject.Find("Hookah").GetComponent<AudioSource>();
         bar.SetActive(false);
         
-        pathToHearts = "heart_HP/"+PlayerStats.currentHealth+"HP/";
         
+        sounds = GetComponents<AudioSource>();
+        smokingSound = sounds[0];
+        CoughSound = sounds[1];
+
+        smoke_speed = PlayerStats.MaxSmokeCapacity;
+        temperature_speed_up = PlayerStats.Temperature_speed_up;
+        temperature_speed_down = PlayerStats.Temperature_speed_down;
         
-        // pathToHearts = ""
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(temperature_slider.value >= 1)
+            Win();
+        
+
         animator.ResetTrigger("trigger_start");
         animator.ResetTrigger("trigger_stop");
-        
-        if(!StartSlider_isPlaying){
+
+        heart.GetComponent<Animator>().speed = PlayerStats.CurrentHeartBeat;
+        heartbeat.SetText(((int)(PlayerStats.CurrentHeartBeat*60)).ToString());
+
+        if(!isSmoking){
             temperature_slider.value-=temperature_speed_down*Time.deltaTime;
             smoke_slider.value -= smoke_speed*Time.deltaTime;
+            PlayerStats.DecreaseHeartBeat();
         }
 
         if(Input.GetMouseButtonDown(0) && firstTouchToStartSmoking){
+            if(CoughSound.isPlaying)
+                CoughSound.Stop();
+
             tapToStart.SetActive(false);
             bar.SetActive(true);
             firstTouchToStartSmoking = false;
-            isSmoking = true;
-            smoke.Stop();
+            inAnimationSmoking = true;
+            smoke_Particles.Stop();
             animator.SetTrigger("trigger_start");
             StartCoroutine(StartSlider());
             BarOperations.StartSpawning();
@@ -82,119 +99,84 @@ public class Smoke : MonoBehaviour
             else if(BarOperations.inCollisionW)
                 WhiteBlockTouched();
         }
-        if(isSmoking){
-            smoke.Stop();
+        if(inAnimationSmoking){
             animator.SetTrigger("trigger_start");
-            StartCoroutine(StartSlider());
+            StartCoroutine(StartSlider());         
+        }
+        if(isSmoking){
             PlayerStats.IncreaseHeartBeat();
         }
-
         
         if(smoke_slider.value==0)
-            smoke.Stop();
-
-        // if(Input.GetMouseButtonDown(0)){
-
-        // // if(Input.touchCount>0){
-        //     smoke.Stop();
-        //     animator.SetTrigger("trigger_start");
-        //     StartCoroutine(StartSlider());
-            
-        // }
-
-        // else{
-        //     if(firstStop){
-        //         stopValue = smoke_slider.value;
-        //         firstStop = false;
-        //         print(stopValue);
-
-        //         // if(stopValue>=0.812 && stopValue <=0.873)
-        //         //     Win();
-        //         // else
-        //         //     Lose();
-        //         if(BarOperations.inCollisionG)
-        //             Win();
-        //         else if(BarOperations.inCollisionR)
-        //             Lose();
-        //         else if(BarOperations.inCollisionW)
-        //             print("Neutral");
-        //         //print(BarOperations.inCollisionG);
-        //         if(audioSource.isPlaying)
-        //             audioSource.Stop();
-                
-        //         smoke.Play();
-                
-        //     }
-            
-        //     animator.SetTrigger("trigger_stop");
-
-        //     // StopCoroutine(StartSlider());
-        //     StopAllCoroutines();
-        //     StartSlider_isPlaying = false;
-        //     if(smoke_slider.value==0)
-        //         smoke.Stop();
-
-            
-        // }
-        
+            smoke_Particles.Stop();
     }
 
     public void WhiteBlockTouched()
     {
-        print("W");
         BarOperations.DestroyObject(BarOperations.colidedObject);
+        temperature_slider.value += 0.05f;
     }
 
     public void RedBlockTouched()
     {
-        print("R");
-        Lose();
-        if(audioSource.isPlaying)
-            audioSource.Stop();
-        smoke.Play();
+        PlayerStats.TakeDamage();
+    }
+
+    public void GreenBlockTouched()
+    {
+        AfterSmoking();
+    }
+
+    IEnumerator StartSlider(){
+        
+        yield return new WaitForSeconds(1);
+
+        isSmoking = true;
+        smoke_slider.value += smoke_speed*Time.deltaTime;
+        temperature_slider.value+=temperature_speed_up*Time.deltaTime;
+        if(!smokingSound.isPlaying)
+            smokingSound.Play();
+        
+    }
+
+    
+    public void Win(){
+        print("WIN");
+        ResetAllValues();
+    }
+
+    public void Lose(){
+        print("DEAD");
+        ResetAllValues();
+    }
+
+    public void AfterSmoking(){
+        if(smokingSound.isPlaying)
+            smokingSound.Stop();
+        
+        smoke_Particles.Play();
 
         animator.SetTrigger("trigger_stop");
         StopAllCoroutines();
-        StartSlider_isPlaying = false;
-        firstTouchToStartSmoking = true;
+
         isSmoking = false;
+        firstTouchToStartSmoking = true;
+        inAnimationSmoking = false;
 
         bar.SetActive(false);
         tapToStart.SetActive(true);
         BarOperations.StopSpawning();
     }
 
-    public void GreenBlockTouched()
-    {
-        print("G");
-    }
-
-    IEnumerator StartSlider(){
+    public void ResetAllValues(){
+        AfterSmoking();
+        CoughSound.Stop();
+        smoke_Particles.Stop();
+        temperature_slider.value = 0;
+        smoke_slider.value = 0;
         
-        yield return new WaitForSeconds(1);
-        // firstStop = true;
-        StartSlider_isPlaying = true;
-        smoke_slider.value += smoke_speed*Time.deltaTime;
-        temperature_slider.value+=temperature_speed_up*Time.deltaTime;
-        if(!audioSource.isPlaying)
-            audioSource.Play();
-        
-        //StartSlider_isPlaying = false;
-    }
+        PlayerStats.ResetAllValues();
 
-    
-    public void Win(){
-       print("WIN");
-    }
-
-    public void Lose(){
-        // print("LOSE");
-        PlayerStats.TakeDamage();
-            // lose_count++;
-            GameObject.Find("Heart").GetComponent<Image>().sprite = Resources.Load<Sprite>(pathToHearts + (PlayerStats.maxHealth - PlayerStats.currentHealth));
-        // }
-        // if(lose_count == 3)
-        //     print("DEAD");
     }
 
     

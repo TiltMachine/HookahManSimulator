@@ -22,8 +22,8 @@ public class BarOperations : MonoBehaviour
     ArrayList spawnedObjects = new ArrayList();
     ArrayList objects_speed = new ArrayList();
 
-    private int RATIO_GREEN = 20;
-    private int RATIO_RED = 30;
+    private int RATIO_GREEN = 25;
+    private int RATIO_RED = 25;
     private int RATIO_WHITE = 50;
 
     public bool inCollisionG = false;
@@ -51,7 +51,7 @@ public class BarOperations : MonoBehaviour
         parentSlider = GameObject.Find("Bar");
         playerBar = GameObject.Find("Bar/PlayerBar");
         //print("GGGGGGGGGGGGG: " + barWidth/playerSpeed);
-        Debug.Log("bar width: " + barWidth);
+        // Debug.Log("bar width: " + barWidth);
         
         // print("V: " + playerSpeed);
         // print("T: "+barWidth/playerSpeed);
@@ -78,7 +78,6 @@ public class BarOperations : MonoBehaviour
         MoveObjects();
         
             
-        
         
     }
 

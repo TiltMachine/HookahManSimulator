@@ -747,7 +747,7 @@ MonoBehaviour:
   m_text: PLAY
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 229e5f42ff2375743be441b2defad9ba, type: 2}
-  m_sharedMaterial: {fileID: -942626477585400940, guid: 229e5f42ff2375743be441b2defad9ba, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 4d0248ca3e1c0304bbce3ce823ae3078, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
