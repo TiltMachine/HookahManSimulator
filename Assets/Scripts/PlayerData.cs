@@ -13,7 +13,6 @@ public class PlayerData
     public float maxSmokeCapacity;
     public float temperature_speed_up;
     public float temperature_speed_down;
-
     public int money;
 
     public PlayerData(Player player){

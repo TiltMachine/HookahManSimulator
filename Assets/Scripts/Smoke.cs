@@ -10,9 +10,14 @@ public class Smoke : MonoBehaviour
     BarOperations BarOperations;
     Player Player;
     Animator animator;
-    GameObject tapToStart;
+    // GameObject startButton; 
+    // GameObject tapToStart;
+
     GameObject bar;
+    GameObject temperature_slider_object;
     GameObject heart;
+
+    GameObject [] playingUI;
     GameObject headerUI;
     TextMeshProUGUI heartbeat;
     TextMeshProUGUI moneyValue;
@@ -27,7 +32,7 @@ public class Smoke : MonoBehaviour
     private float temperature_speed_up;
     private float temperature_speed_down;
 
-    bool firstTouchToStartSmoking = true;
+    bool firstTouchToStartSmoking = false;
     bool inAnimationSmoking = false;
     bool isSmoking = false;
    
@@ -41,16 +46,18 @@ public class Smoke : MonoBehaviour
         BarOperations = GameObject.Find("Bar/PlayerBar").GetComponent<BarOperations>();
         Player = GetComponent<Player>();
         animator = GetComponent<Animator>();
-        tapToStart = GameObject.Find("TapToStart");
+        // tapToStart = GameObject.Find("TapToStart");
+        // startButton = GameObject.Find("HeaderUI/");
         bar = GameObject.Find("Bar");
         headerUI = GameObject.Find("HeaderUI");
         heart = GameObject.Find("Heart");
         heartbeat = GameObject.Find("Heart/BPM").GetComponent<TextMeshProUGUI>();
         moneyValue = GameObject.Find("HeaderUI/MoneyParent/MoneyValue").GetComponent<TextMeshProUGUI>();
         smoke_slider = bar.GetComponent<Slider>();
+        temperature_slider_object = GameObject.Find("TemperatureSlider");
         temperature_slider = GameObject.Find("TemperatureSlider").GetComponent<Slider>();
         // smokingSound = GameObject.Find("Hookah").GetComponent<AudioSource>();
-        bar.SetActive(false);
+        // bar.SetActive(false);
         
         sounds = GetComponents<AudioSource>();
         smokingSound = sounds[0];
@@ -59,6 +66,16 @@ public class Smoke : MonoBehaviour
         smoke_speed = Player.MaxSmokeCapacity;
         temperature_speed_up = Player.Temperature_speed_up;
         temperature_speed_down = Player.Temperature_speed_down;
+
+        playingUI = new GameObject[3];
+        playingUI[0] = bar;
+        playingUI[1] = heart;
+        playingUI[2] = temperature_slider_object;
+
+        foreach(GameObject obj in playingUI){
+            obj.SetActive(false);
+        }
+        
         
     }
 
@@ -83,13 +100,19 @@ public class Smoke : MonoBehaviour
                 Player.DecreaseHeartBeat();
             }
 
-            if(Input.GetMouseButtonDown(0) && firstTouchToStartSmoking){
+            // if(Input.GetMouseButtonDown(0) && firstTouchToStartSmoking){
+            if(firstTouchToStartSmoking){
                 if(CoughSound.isPlaying)
                     CoughSound.Stop();
 
-                tapToStart.SetActive(false);
+                // tapToStart.SetActive(false);
                 headerUI.SetActive(false);
-                bar.SetActive(true);
+                // bar.SetActive(true);
+
+                foreach(GameObject obj in playingUI){
+                    obj.SetActive(true);
+                }
+
                 firstTouchToStartSmoking = false;
                 inAnimationSmoking = true;
                 smoke_Particles.Stop();
@@ -99,6 +122,7 @@ public class Smoke : MonoBehaviour
                 
             }
             else if(Input.GetMouseButtonDown(0)){
+                // print("down");
                 if(BarOperations.inCollisionG)
                     GreenBlockTouched();
                 else if(BarOperations.inCollisionR)
@@ -120,7 +144,9 @@ public class Smoke : MonoBehaviour
 
     }
     
-
+    public void PlayButtonTouched(){
+        firstTouchToStartSmoking = true;
+    }
     public void WhiteBlockTouched()
     {
         BarOperations.DestroyObject(BarOperations.colidedObject);
@@ -172,11 +198,14 @@ public class Smoke : MonoBehaviour
         StopAllCoroutines();
 
         isSmoking = false;
-        firstTouchToStartSmoking = true;
+        firstTouchToStartSmoking = false;
         inAnimationSmoking = false;
 
-        bar.SetActive(false);
-        tapToStart.SetActive(true);
+        // bar.SetActive(false);
+        foreach(GameObject obj in playingUI){
+            obj.SetActive(false);
+        }
+        // tapToStart.SetActive(true);
         headerUI.SetActive(true);
 
         BarOperations.StopSpawning();
