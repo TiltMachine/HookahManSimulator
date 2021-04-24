@@ -27,13 +27,19 @@ public class Player : MonoBehaviour
     public float Temperature_speed_down { get => temperature_speed_down; set => temperature_speed_down = value; }
     public float HeartBeatIncreaseSpeed { get => heartBeatIncreaseSpeed; set => heartBeatIncreaseSpeed = value; }
     public float HeartBeatDecreaseSpeed { get => heartBeatDecreaseSpeed; set => heartBeatDecreaseSpeed = value; }
-    public int Money { get => money; set => money = value; }
+    public int Money
+    { get => money; 
+    set {
+            money = value;
+            SavePlayer();
+        }
+    }
 
     private string pathToHearts;
     Smoke Smoke;
 
     private void Awake() {
-        if(SaveSystem.existSaveFile())
+        if(SaveSystem.exist_Player_SaveFile())
             LoadPlayer();
         else
             SavePlayer();
@@ -51,7 +57,7 @@ public class Player : MonoBehaviour
         PlayerData data = SaveSystem.LoadPlayer();
 
         if(data == null){
-            Debug.Log("+");
+            Debug.Log("NO DATA");
         }
         else{
             maxHealth = data.maxHealth;

@@ -11,7 +11,7 @@ public class Smoke : MonoBehaviour
     Player Player;
     Animator animator;
     // GameObject startButton; 
-    // GameObject tapToStart;
+    GameObject tapToStart;
 
     GameObject bar;
     GameObject temperature_slider_object;
@@ -35,7 +35,10 @@ public class Smoke : MonoBehaviour
     bool firstTouchToStartSmoking = false;
     bool inAnimationSmoking = false;
     bool isSmoking = false;
-   
+    bool in_phase_game = false;
+    bool is_ready_to_smoke = false;
+    
+    // bool isIdle = false;
     [SerializeField]
     ParticleSystem smoke_Particles;
 
@@ -46,7 +49,8 @@ public class Smoke : MonoBehaviour
         BarOperations = GameObject.Find("Bar/PlayerBar").GetComponent<BarOperations>();
         Player = GetComponent<Player>();
         animator = GetComponent<Animator>();
-        // tapToStart = GameObject.Find("TapToStart");
+        tapToStart = GameObject.Find("TapToStart");
+        tapToStart.SetActive(false);
         // startButton = GameObject.Find("HeaderUI/");
         bar = GameObject.Find("Bar");
         headerUI = GameObject.Find("HeaderUI");
@@ -104,8 +108,8 @@ public class Smoke : MonoBehaviour
             if(firstTouchToStartSmoking){
                 if(CoughSound.isPlaying)
                     CoughSound.Stop();
-
-                // tapToStart.SetActive(false);
+                is_ready_to_smoke = false;
+                tapToStart.SetActive(false);
                 headerUI.SetActive(false);
                 // bar.SetActive(true);
 
@@ -119,9 +123,8 @@ public class Smoke : MonoBehaviour
                 animator.SetTrigger("trigger_start");
                 StartCoroutine(StartSlider());
                 BarOperations.StartSpawning();
-                
             }
-            else if(Input.GetMouseButtonDown(0)){
+            else if(Input.GetMouseButtonDown(0) && isSmoking){
                 // print("down");
                 if(BarOperations.inCollisionG)
                     GreenBlockTouched();
@@ -129,6 +132,10 @@ public class Smoke : MonoBehaviour
                     RedBlockTouched();
                 else if(BarOperations.inCollisionW)
                     WhiteBlockTouched();
+            }
+            else if(is_ready_to_smoke && Input.GetMouseButtonDown(0)){
+                // print("helllo");
+                PlayButtonTouched();
             }
             if(inAnimationSmoking){
                 animator.SetTrigger("trigger_start");
@@ -140,12 +147,19 @@ public class Smoke : MonoBehaviour
             
             if(smoke_slider.value==0)
                 smoke_Particles.Stop();
+            
+            // isIdle = !(isSmoking || inAnimationSmoking);
+            // if(isIdle && Input.GetMouseButtonDown(0)){
+            //     print("helllo");
+            //     PlayButtonTouched();
+            // }
         }
 
     }
     
     public void PlayButtonTouched(){
         firstTouchToStartSmoking = true;
+        in_phase_game = true;
     }
     public void WhiteBlockTouched()
     {
@@ -201,17 +215,22 @@ public class Smoke : MonoBehaviour
         firstTouchToStartSmoking = false;
         inAnimationSmoking = false;
 
-        // bar.SetActive(false);
-        foreach(GameObject obj in playingUI){
-            obj.SetActive(false);
-        }
+        bar.SetActive(false);
+
+        // foreach(GameObject obj in playingUI){
+        //     obj.SetActive(false);
+        // }
+
         // tapToStart.SetActive(true);
-        headerUI.SetActive(true);
+        // headerUI.SetActive(true);
 
         BarOperations.StopSpawning();
+        if(in_phase_game)
+            Invoke("SmokeCooldown", 2);
     }
 
     public void ResetAllValues(){
+        in_phase_game = false;
         AfterSmoking();
         CoughSound.Stop();
         smoke_Particles.Stop();
@@ -219,7 +238,15 @@ public class Smoke : MonoBehaviour
         smoke_slider.value = 0;
         
         Player.ResetAllValues();
+        foreach(GameObject obj in playingUI){
+            obj.SetActive(false);
+        }
+        headerUI.SetActive(true);
 
+    }
+    public void SmokeCooldown(){
+        is_ready_to_smoke = true;
+        tapToStart.SetActive(true);
     }
 
     
