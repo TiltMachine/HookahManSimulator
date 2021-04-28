@@ -89,7 +89,7 @@ public class ShopScript : MonoBehaviour
         parentObj.GetComponent<Image>().color = clickedCategoryColor;
 
         ChangeCategory(parentObj.GetComponent<CategoryChooser>().ResponsibleCategory);
-
+            //defffe
     }
 
     public void ChangeCategory(GameObject newCategory){
@@ -170,6 +170,7 @@ public class ShopScript : MonoBehaviour
         return false;
         
     }
+    
 
     }
  

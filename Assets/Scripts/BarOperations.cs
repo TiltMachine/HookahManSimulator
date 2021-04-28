@@ -22,9 +22,9 @@ public class BarOperations : MonoBehaviour
     ArrayList spawnedObjects = new ArrayList();
     ArrayList objects_speed = new ArrayList();
 
-    private int RATIO_GREEN = 25;
-    private int RATIO_RED = 25;
-    private int RATIO_WHITE = 50;
+    private float RATIO_GREEN = 25;
+    private float RATIO_RED = 25;
+    private float RATIO_WHITE = 50;
 
     public bool inCollisionG = false;
     public bool inCollisionR = false;
@@ -33,6 +33,11 @@ public class BarOperations : MonoBehaviour
     public GameObject colidedObject;
 
     // private float boxScale_COEF;
+
+    public int r = 0;
+    public int g = 0;
+    public int w = 0;
+    public int total = 0;
 
     void Start()
     {
@@ -57,13 +62,20 @@ public class BarOperations : MonoBehaviour
         // print("T: "+barWidth/playerSpeed);
 
         // StartSpawning();
-        
-          
+        // RATIO_WHITE = 50 + FindX(RATIO_WHITE,RATIO_GREEN,RATIO_RED,0.2f);
+        // RATIO_GREEN = RATIO_GREEN + FindX(RATIO_GREEN,RATIO_WHITE,RATIO_RED,0.9f);
+
+        //   for(int i=0;i<100000;i++){
+        //     total++;
+        //     Rand();    
+        // }
+        // Debug.Log("G: "+ g*100.0/total +"\nR: "+r*100.0/total + "\nW: "+w*100.0/total);
     }
 
     // Update is called once per frame
     void Update()
     {   
+
         if(GetComponent<RectTransform>().localPosition.x >= rightBound-10)
             directionR = false;
         if(GetComponent<RectTransform>().localPosition.x <= leftBound+10)
@@ -77,8 +89,28 @@ public class BarOperations : MonoBehaviour
         
         MoveObjects();
         
-            
         
+        
+        
+        
+    }
+    void Rand(){
+        float x = Random.Range(0,RATIO_GREEN+RATIO_RED+RATIO_WHITE);
+
+        if ((x -= RATIO_GREEN) < 0){ 
+            g++;
+        } 
+        else if ((x -= RATIO_RED) < 0){ 
+            r++;
+        }
+        else{ 
+            w++;
+        }
+        // Debug.Log("G: "+ g*100.0/total +"\nR: "+r*100.0/total + "\nW: "+w*100.0/total);
+
+    }
+    public float FindX(float change, float a, float b, float p){
+        return (((a+b)*(p*(a+b+change)+change))/((a+b+change)*(1-p)-change)) - change;
     }
 
     void Spawn(){
@@ -121,7 +153,7 @@ public class BarOperations : MonoBehaviour
         }
     }
     void SelectColor(GameObject obj){
-        int x = Random.Range(0,RATIO_GREEN+RATIO_RED+RATIO_WHITE);
+        float x = Random.Range(0,RATIO_GREEN+RATIO_RED+RATIO_WHITE);
 
         if ((x -= RATIO_GREEN) < 0){ 
             obj.tag = "GreenBlock";

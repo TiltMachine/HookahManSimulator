@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -11,10 +9,10 @@ public static class SaveSystem
 
 
     public static void SavePlayer(Player player){
-        BinaryFormatter formatter = new BinaryFormatter();
-        FileStream stream = new FileStream(path_Player_SaveFile,FileMode.Create);
+        var formatter = new BinaryFormatter();
+        var stream = new FileStream(path_Player_SaveFile,FileMode.Create);
         
-        PlayerData data = new PlayerData(player);
+        var data = new PlayerData(player);
         formatter.Serialize(stream,data);
         stream.Close();
 
