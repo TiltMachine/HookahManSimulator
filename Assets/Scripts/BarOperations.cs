@@ -13,6 +13,8 @@ public class BarOperations : MonoBehaviour
     
     private float playerSpeed;
 
+    public Player player;
+
 
     RectTransform canvas;
 
@@ -22,9 +24,9 @@ public class BarOperations : MonoBehaviour
     ArrayList spawnedObjects = new ArrayList();
     ArrayList objects_speed = new ArrayList();
 
-    private float RATIO_GREEN = 25;
-    private float RATIO_RED = 25;
-    private float RATIO_WHITE = 50;
+    private float RATIO_GREEN;
+    private float RATIO_RED;
+    private float RATIO_WHITE;
 
     public bool inCollisionG = false;
     public bool inCollisionR = false;
@@ -42,6 +44,12 @@ public class BarOperations : MonoBehaviour
     void Start()
     {
         canvas = GameObject.Find("Canvas").GetComponent<RectTransform>();
+        player = GameObject.Find("HandParent").GetComponent<Player>();
+
+        RATIO_GREEN = player.RATIO_GREEN1;
+        RATIO_RED = player.RATIO_RED1;
+        RATIO_WHITE = player.RATIO_WHITE1;
+
         leftBound = -canvas.rect.width/2 + 103;
         rightBound = canvas.rect.width/2 - 103;
         
@@ -65,11 +73,11 @@ public class BarOperations : MonoBehaviour
         // RATIO_WHITE = 50 + FindX(RATIO_WHITE,RATIO_GREEN,RATIO_RED,0.2f);
         // RATIO_GREEN = RATIO_GREEN + FindX(RATIO_GREEN,RATIO_WHITE,RATIO_RED,0.9f);
 
-        //   for(int i=0;i<100000;i++){
-        //     total++;
-        //     Rand();    
-        // }
-        // Debug.Log("G: "+ g*100.0/total +"\nR: "+r*100.0/total + "\nW: "+w*100.0/total);
+          for(int i=0;i<100000;i++){
+            total++;
+            Rand();    
+        }
+        Debug.Log("G: "+ g*100.0/total +"\nR: "+r*100.0/total + "\nW: "+w*100.0/total);
     }
 
     // Update is called once per frame

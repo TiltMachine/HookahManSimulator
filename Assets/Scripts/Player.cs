@@ -17,16 +17,20 @@ public class Player : MonoBehaviour
     private float temperature_speed_down = 0.007f;
 
     private float currentHeartBeat = 1;
+
+    private float RATIO_GREEN = 25;
+    private float RATIO_RED = 25;
+    private float RATIO_WHITE = 50;
     public int currentHealth {get; set;}
     
     public float MaxSmokeCapacity { get => maxSmokeCapacity; set => maxSmokeCapacity = value; }
     public float CurrentHeartBeat { get => currentHeartBeat; set => currentHeartBeat = value; }
     public float MaxHeartBeat { get => maxHeartBeat; set => maxHeartBeat = value; }
-    public int MaxHealth { get => maxHealth; set => maxHealth = value; }
+    public int MaxHealth { get => maxHealth; set { maxHealth = value; SavePlayer();} }
     public float Temperature_speed_up { get => temperature_speed_up; set => temperature_speed_up = value; }
     public float Temperature_speed_down { get => temperature_speed_down; set => temperature_speed_down = value; }
-    public float HeartBeatIncreaseSpeed { get => heartBeatIncreaseSpeed; set => heartBeatIncreaseSpeed = value; }
-    public float HeartBeatDecreaseSpeed { get => heartBeatDecreaseSpeed; set => heartBeatDecreaseSpeed = value; }
+    public float HeartBeatIncreaseSpeed { get => heartBeatIncreaseSpeed; set { heartBeatIncreaseSpeed = value; SavePlayer(); }}
+    public float HeartBeatDecreaseSpeed { get => heartBeatDecreaseSpeed; set { heartBeatDecreaseSpeed = value;SavePlayer(); } }
     public int Money
     { get => money; 
     set {
@@ -34,6 +38,10 @@ public class Player : MonoBehaviour
             SavePlayer();
         }
     }
+
+    public float RATIO_GREEN1 { get => RATIO_GREEN; set { RATIO_GREEN = value; SavePlayer();} }
+    public float RATIO_RED1 { get => RATIO_RED; set { RATIO_RED = value; SavePlayer();} }
+    public float RATIO_WHITE1 { get => RATIO_WHITE; set { RATIO_WHITE = value; SavePlayer();} }
 
     private string pathToHearts;
     Smoke Smoke;
@@ -68,6 +76,9 @@ public class Player : MonoBehaviour
             temperature_speed_up = data.temperature_speed_up;
             temperature_speed_down = data.temperature_speed_down;
             money = data.money;
+            RATIO_GREEN = data.RATIO_GREEN;
+            RATIO_RED = data.RATIO_RED;
+            RATIO_WHITE = data.RATIO_WHITE;
         }
     }
     

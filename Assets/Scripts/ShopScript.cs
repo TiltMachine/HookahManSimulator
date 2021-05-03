@@ -30,6 +30,7 @@ public class ShopScript : MonoBehaviour
 
     GameObject ItemTemplate;
     GameObject g;
+    enum efe {eff, East, South, West};
 
     private void Awake() {
         if(SaveSystem.exist_Shop_SaveFile())
@@ -108,6 +109,7 @@ public class ShopScript : MonoBehaviour
             g.transform.GetChild(0).GetComponent<Image>().sprite = list[i].Image;
             g.transform.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().SetText(list[i].Price.ToString());
             g.transform.GetChild(2).GetComponent<Button>().interactable = !list[i].isPurchased;
+            g.transform.GetChild(3).GetComponent<TextMeshProUGUI>().SetText(list[i].title);
         }
         Destroy(ItemTemplate);
     }
@@ -121,7 +123,7 @@ public class ShopScript : MonoBehaviour
         GameObject.Find("Content_Furniture").SetActive(false);
     }
 
-
+    
     public void BuyButton_Clicked(){
         GameObject button = EventSystem.current.currentSelectedGameObject;
         int index = button.transform.parent.GetSiblingIndex();
@@ -163,14 +165,39 @@ public class ShopScript : MonoBehaviour
         if(Player.Money >= item.Price){
             Player.Money -= item.Price;
             balance.SetText((Player.Money).ToString());
+            
+            switch(item.statName){
+                case "max_health":
+                    print((int)(item.buff));
+                    Player.MaxHealth += (int)(item.buff);
+                    break;
+                case "energy":
+                    Player.HeartBeatIncreaseSpeed -= item.buff;
+                    Player.HeartBeatDecreaseSpeed += item.buff;
+                    break;
+                case "more_green":
+                    Player.RATIO_GREEN1 += FindX(Player.RATIO_GREEN1,Player.RATIO_WHITE1,Player.RATIO_RED1,item.buff);
+                    break;
+                case "more_white":
+                    Player.RATIO_WHITE1 += FindX(Player.RATIO_WHITE1,Player.RATIO_GREEN1,Player.RATIO_RED1,item.buff);
+                    break;
+                case "less_red":
+                    Player.RATIO_RED1 += FindX(Player.RATIO_RED1,Player.RATIO_WHITE1,Player.RATIO_GREEN1,-item.buff);
+                    break;
+            }
+
             return true;
         }
 
         print("Not enough money");
         return false;
         
+        
     }
-    
+    public float FindX(float change, float a, float b, float p){
+        return (((a+b)*(p*(a+b+change)+change))/((a+b+change)*(1-p)-change)) - change;
+    }
+    // RATIO_GREEN = RATIO_GREEN + FindX(RATIO_GREEN,RATIO_WHITE,RATIO_RED,0.9f);
 
     }
  
