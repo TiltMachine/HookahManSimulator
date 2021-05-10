@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
 {
     private int maxHealth = 3;
     private int money = 0;
+    private int HOOKAH_LEVEL = 0;
     private float maxHeartBeat = 3.5f;
     private float heartBeatIncreaseSpeed = 0.3f;
     private float heartBeatDecreaseSpeed = 0.2f;
@@ -42,6 +43,8 @@ public class Player : MonoBehaviour
     public float RATIO_GREEN1 { get => RATIO_GREEN; set { RATIO_GREEN = value; SavePlayer();} }
     public float RATIO_RED1 { get => RATIO_RED; set { RATIO_RED = value; SavePlayer();} }
     public float RATIO_WHITE1 { get => RATIO_WHITE; set { RATIO_WHITE = value; SavePlayer();} }
+
+    public int HOOKAH_LEVEL1 { get => HOOKAH_LEVEL; set => HOOKAH_LEVEL = value; }
 
     private string pathToHearts;
     Smoke Smoke;
@@ -79,6 +82,7 @@ public class Player : MonoBehaviour
             RATIO_GREEN = data.RATIO_GREEN;
             RATIO_RED = data.RATIO_RED;
             RATIO_WHITE = data.RATIO_WHITE;
+            HOOKAH_LEVEL = data.HOOKAH_LEVEL;
         }
     }
     

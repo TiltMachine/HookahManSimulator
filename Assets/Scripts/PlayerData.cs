@@ -6,6 +6,8 @@ using UnityEngine;
 public class PlayerData
 {
     public int maxHealth;
+
+    public int HOOKAH_LEVEL;
     public float maxHeartBeat;
     public float heartBeatIncreaseSpeed;
     public float heartBeatDecreaseSpeed;
@@ -30,5 +32,6 @@ public class PlayerData
         RATIO_GREEN = player.RATIO_GREEN1;
         RATIO_RED = player.RATIO_RED1;
         RATIO_WHITE = player.RATIO_WHITE1;
+        HOOKAH_LEVEL = player.HOOKAH_LEVEL1;
     }
 }

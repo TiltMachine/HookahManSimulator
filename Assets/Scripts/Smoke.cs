@@ -16,6 +16,7 @@ public class Smoke : MonoBehaviour
     GameObject bar;
     GameObject temperature_slider_object;
     GameObject heart;
+    GameObject exitSmokingButton;
 
     GameObject [] playingUI;
     GameObject headerUI;
@@ -37,6 +38,7 @@ public class Smoke : MonoBehaviour
     bool isSmoking = false;
     bool in_phase_game = false;
     bool is_ready_to_smoke = false;
+    bool exitButtonClicked = false;
     
     // bool isIdle = false;
     [SerializeField]
@@ -55,6 +57,7 @@ public class Smoke : MonoBehaviour
         bar = GameObject.Find("Bar");
         headerUI = GameObject.Find("HeaderUI");
         heart = GameObject.Find("Heart");
+        exitSmokingButton = GameObject.Find("ExitSmoking");
         heartbeat = GameObject.Find("Heart/BPM").GetComponent<TextMeshProUGUI>();
         moneyValue = GameObject.Find("HeaderUI/MoneyParent/MoneyValue").GetComponent<TextMeshProUGUI>();
         smoke_slider = bar.GetComponent<Slider>();
@@ -71,10 +74,11 @@ public class Smoke : MonoBehaviour
         temperature_speed_up = Player.Temperature_speed_up;
         temperature_speed_down = Player.Temperature_speed_down;
 
-        playingUI = new GameObject[3];
+        playingUI = new GameObject[4];
         playingUI[0] = bar;
         playingUI[1] = heart;
         playingUI[2] = temperature_slider_object;
+        playingUI[3] = exitSmokingButton;
 
         foreach(GameObject obj in playingUI){
             obj.SetActive(false);
@@ -92,6 +96,11 @@ public class Smoke : MonoBehaviour
 
         if(temperature_slider.value >= 1)
             Win();
+        
+        else if(exitButtonClicked){
+            exitButtonClicked = false;
+            Lose();
+        }
         else{
                 
             heart.GetComponent<Animator>().speed = Player.CurrentHeartBeat;
@@ -133,8 +142,9 @@ public class Smoke : MonoBehaviour
                 else if(BarOperations.inCollisionW)
                     WhiteBlockTouched();
             }
-            else if(is_ready_to_smoke && Input.GetMouseButtonDown(0)){
-                // print("helllo");
+            // GetMouseButtonUp или палец после отпускания
+            else if(is_ready_to_smoke && Input.GetMouseButtonUp(0)){
+                print("helllo");
                 PlayButtonTouched();
             }
             if(inAnimationSmoking){
@@ -160,6 +170,7 @@ public class Smoke : MonoBehaviour
     public void PlayButtonTouched(){
         firstTouchToStartSmoking = true;
         in_phase_game = true;
+        // exitButtonClicked = false;
     }
     public void WhiteBlockTouched()
     {
@@ -245,8 +256,14 @@ public class Smoke : MonoBehaviour
 
     }
     public void SmokeCooldown(){
-        is_ready_to_smoke = true;
-        tapToStart.SetActive(true);
+        if(in_phase_game){
+            is_ready_to_smoke = true;
+            tapToStart.SetActive(true);
+        }
+    }
+    public void ExitButton(){
+        exitButtonClicked = true;
+        tapToStart.SetActive(false);
     }
 
     
