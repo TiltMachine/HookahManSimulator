@@ -373,6 +373,7 @@ GameObject:
   - component: {fileID: 197736431}
   - component: {fileID: 197736433}
   - component: {fileID: 197736432}
+  - component: {fileID: 197736434}
   m_Layer: 5
   m_Name: PlayText
   m_TagString: Untagged
@@ -446,10 +447,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 48.3
+  m_fontSize: 42.65
   m_fontSizeBase: 48.3
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
@@ -496,6 +497,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 197736430}
   m_CullTransparentMesh: 1
+--- !u!114 &197736434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197736430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 009e1a8215092914faf042713088075f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: play_button
 --- !u!1 &223464253
 GameObject:
   m_ObjectHideFlags: 0
@@ -822,6 +836,7 @@ GameObject:
   - component: {fileID: 287988810}
   - component: {fileID: 287988812}
   - component: {fileID: 287988811}
+  - component: {fileID: 287988813}
   m_Layer: 5
   m_Name: ShopText
   m_TagString: Untagged
@@ -895,10 +910,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 48.3
+  m_fontSize: 42.65
   m_fontSizeBase: 48.3
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
@@ -945,6 +960,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 287988809}
   m_CullTransparentMesh: 1
+--- !u!114 &287988813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 287988809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 009e1a8215092914faf042713088075f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: shop
 --- !u!1 &292603456
 GameObject:
   m_ObjectHideFlags: 0
@@ -13298,6 +13326,7 @@ GameObject:
   - component: {fileID: 2002096452}
   - component: {fileID: 2002096451}
   - component: {fileID: 2002096453}
+  - component: {fileID: 2002096454}
   m_Layer: 5
   m_Name: TapToStart
   m_TagString: Untagged
@@ -13373,12 +13402,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 99.19
+  m_fontSize: 87.48
   m_fontSizeBase: 99.19
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 87.48
   m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -13442,6 +13471,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2002096454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2002096449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 009e1a8215092914faf042713088075f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: tapToStart
 --- !u!43 &2011614058
 Mesh:
   m_ObjectHideFlags: 8
