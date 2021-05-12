@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 [System.Serializable]
 public class PlayerStats : MonoBehaviour
 {
@@ -34,6 +35,11 @@ public class PlayerStats : MonoBehaviour
 
     public void Die(){
         Debug.Log("Player is dead");
+<<<<<<< Updated upstream
+=======
+        Smoke.Lose();
+
+>>>>>>> Stashed changes
     }
 }
 

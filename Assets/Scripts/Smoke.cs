@@ -3,6 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+<<<<<<< Updated upstream
+=======
+using TMPro;
+using UnityEngine.SceneManagement;
+>>>>>>> Stashed changes
 public class Smoke : MonoBehaviour
 {
     BarOperations BarOperations;
@@ -184,6 +189,7 @@ public class Smoke : MonoBehaviour
 
     
     public void Win(){
+<<<<<<< Updated upstream
        print("WIN");
     }
 
@@ -195,6 +201,46 @@ public class Smoke : MonoBehaviour
         // }
         // if(lose_count == 3)
         //     print("DEAD");
+=======
+        print("WIN");
+        ResetAllValues();
+        SceneManager.LoadScene(2);
+    }
+
+    public void Lose(){
+        print("DEAD");
+        ResetAllValues();
+        SceneManager.LoadScene(3);
+    }
+
+    public void AfterSmoking(){
+        if(smokingSound.isPlaying)
+            smokingSound.Stop();
+        
+        smoke_Particles.Play();
+
+        animator.SetTrigger("trigger_stop");
+        StopAllCoroutines();
+
+        isSmoking = false;
+        firstTouchToStartSmoking = true;
+        inAnimationSmoking = false;
+
+        bar.SetActive(false);
+        tapToStart.SetActive(true);
+        BarOperations.StopSpawning();
+    }
+
+    public void ResetAllValues(){
+        AfterSmoking();
+        CoughSound.Stop();
+        smoke_Particles.Stop();
+        temperature_slider.value = 0;
+        smoke_slider.value = 0;
+        
+        PlayerStats.ResetAllValues();
+
+>>>>>>> Stashed changes
     }
 
     
