@@ -1,4 +1,4 @@
-# HookahMan
+# HookahMan Simulator
 <div> Mobile game, where you smoke hookah and earn coins 🚭 (Just a project for fun)
 </div>
 
